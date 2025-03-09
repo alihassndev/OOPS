@@ -1,0 +1,22 @@
+abstract class Automobile {
+    abstract void start();
+
+    void stop() {
+        System.out.println("Vehicle Stopped.");
+    }
+}
+
+class Cars extends Automobile {
+    @Override
+    void start() {
+        System.out.println("Car starts with key.");
+    }
+}
+
+public class Vehicle {
+    public static void main(String[] args) {
+        Cars car = new Cars();
+        car.start();
+        car.stop();
+    }
+}

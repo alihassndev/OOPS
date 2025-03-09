@@ -1,0 +1,276 @@
+// Program 1: Swapping Two Numbers Without a Temporary Variable
+
+// Separate Class
+public class Test1 {
+    private int num1;
+    private int num2;
+
+//    Default Constructor
+    Test1() {
+        num1 = 0;
+        num2 = 0;
+    }
+
+//    Setters
+    void setNum1(int num1) {
+        this.num1 = num1;
+    }
+    void setNum2(int num2) {
+        this.num2 = num2;
+    }
+
+//    Getters
+    int getNum1() {
+        return num1;
+    }
+    int getNum2() {
+        return num2;
+    }
+
+//    Swap Method
+    void swap() {
+        num1 = num1+num2;
+        num2 = num1-num2;
+        num1 = num1-num2;
+    }
+
+//    Display Numbers
+    void output() {
+        System.out.println("Num1 = " + num1 + " and Num2 = " + num2);
+    }
+}
+
+// Main class
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, This is main Method !\n");
+
+        Test1 obj = new Test1();
+        obj.setNum1(2);
+        obj.setNum2(5);
+        obj.output();
+
+        obj.swap();
+        obj.output();
+    }
+}
+
+// ==================================================
+// Program 2: Finding the Greatest of Three Numbers
+
+// Separate Class
+public class Test1 {
+    private int num1;
+    private int num2;
+    private int num3;
+
+//    Default Constructor
+    Test1() {
+        num1 = 0;
+        num2 = 0;
+        num3 = 0;
+    }
+
+//    Setters
+    void setNum1(int num) {
+        this.num1 = num;
+    }
+    void setNum2(int num) {
+        this.num2 = num;
+    }
+    void setNum3(int num) {
+        this.num3 = num;
+    }
+
+//    Getters
+    int getNum1() {
+        return num1;
+    }
+    int getNum2() {
+        return num2;
+    }
+    int getNum3() {
+        return num3;
+    }
+
+//    Find Greatest Number
+    int great() {
+        if (num1 >= num2 && num1 >= num3) {
+            return num1;
+        } else if (num2 >= num1 && num2 >= num3) {
+            return num2;
+        } else {
+            return num3;
+        }
+    }
+}
+
+// Main class
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, This is main Method !\n");
+
+        Test1 obj = new Test1();
+        obj.setNum1(8);
+        obj.setNum2(4);
+        obj.setNum3(5);
+
+        int max = obj.great();
+
+        System.out.println("Num1 = " + obj.getNum1() + ", Num2 = " + obj.getNum2() + " and Num3 = " + obj.getNum3());
+        System.out.println("Greatest Number = " + max);
+    }
+}
+
+// ==================================================
+// Program 3: Checking Even or Odd
+
+// Separate Class
+public class Test1 {
+    private int num1;
+
+//    Default Constructor
+    Test1() {
+        num1 = 0;
+    }
+
+//    Setters
+    void setNum1(int num) {
+        this.num1 = num;
+    }
+
+//    Getters
+    int getNum1() {
+        return num1;
+    }
+
+//    Find Even / Odd
+    void check() {
+        if (num1 %2 == 0) {
+            System.out.println("Num1 = " + num1 + " is \'Even\'!");
+        } else {
+            System.out.println("Num1 = " + num1 + " is \'Odd\'!");
+        }
+    }
+}
+
+import java.util.Scanner;
+
+// Main class
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Hello, This is main Method !\n");
+        System.out.print("Enter a number: ");
+        int num = sc.nextInt();
+
+        Test1 obj = new Test1();
+        obj.setNum1(num);
+        obj.check();
+    }
+}
+
+// ==================================================
+// Program 4: Factorial Calculation
+
+// Separate Class
+public class Test1 {
+    private int num1;
+
+//    Default Constructor
+    Test1() {
+        num1 = 0;
+    }
+
+//    Setters
+    void setNum1(int num) {
+        this.num1 = num;
+    }
+
+//    Getters
+    int getNum1() {
+        return num1;
+    }
+
+//    Calculating Factorial
+    int fact(int num) {
+        if (num == 1) {
+            return 1;
+        } else {
+            return num * fact(num-1);
+        }
+    }
+}
+
+import java.util.Scanner;
+
+// Main class
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Hello, This is main Method !\n");
+        System.out.print("Enter a number: ");
+        int num = sc.nextInt();
+
+        Test1 obj = new Test1();
+        obj.setNum1(num);
+        int fact = obj.fact(num);
+        System.out.println("Factorial of number " + num + " is: " + fact);
+    }
+}
+
+// ==================================================
+// Program 5: Class and Object Example
+
+// Student Class
+public class Student {
+    private String name;
+    private int age;
+
+//    Default Constructor
+    Student() {
+        name = "Default";
+        age = 0;
+    }
+
+//    Setters
+    void setName(String name) {
+        this.name = name;
+    }
+    void setAge(int age) {
+        this.age = age;
+    }
+
+//    Getters
+    String getName() {
+        return name;
+    }
+    int getAge() {
+        return age;
+    }
+}
+
+import java.util.Scanner;
+
+// Main class
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Hello, This is main Method !\n");
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter your age: ");
+        int age = sc.nextInt();
+
+        Student std1 = new Student();
+
+        std1.setName(name);
+        std1.setAge(age);
+
+//        Printing Info
+        System.out.println("Your Name: \'" + std1.getName() + "\' and Age: " + std1.getAge());
+    }
+}
+
+// ==================================================
