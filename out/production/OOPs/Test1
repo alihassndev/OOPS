@@ -1,0 +1,84 @@
+// Address
+class Address {
+    private String city;
+    private String state;
+
+//    Constructor
+    Address() {
+        this.city = "Sialkot";
+        this.state = "Punjab";
+    }
+
+//    Setters
+    void setCity(String name) {
+        city = name;
+    }
+    void setState(String name) {
+        state = name;
+    }
+
+//    Getters
+    String getCity() {
+        return city;
+    }
+    String getState() {
+        return state;
+    }
+
+//    Display Complete Address
+    void display() {
+        System.out.println(city + ", " + state);
+    }
+}
+
+// Student Class
+class Students {
+    private String name;
+    private Address address;
+
+//    Constructor
+    Students() {
+        this.name = "Default";
+//        this.address = ?;
+    }
+
+//    Setters
+    void setName(String name) {
+        this.name = name;
+    }
+    void setAddress(Address address) {
+        this.address = address;
+    }
+
+//    Getters
+    String getName() {
+        return name;
+    }
+    Address getAddress() {
+        return address;
+    }
+
+//    Display Info
+    void display() {
+        System.out.println("Your name: " + name + " and address: " + address.getCity() + ", " + address.getState());
+    }
+}
+
+public class Test1 {
+    public static void main(String[] args) {
+        System.out.println("This is main!");
+        Address address = new Address();
+        address.setCity("Sialkot");
+        address.setState("Punjab");
+        address.display();
+
+        Students std1 = new Students();
+        std1.setName("Ali Hassan");
+        std1.setAddress(address);
+
+        std1.display();
+
+//        What's happening here?
+        System.out.println(std1.getAddress());
+    }
+}
