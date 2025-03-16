@@ -5,6 +5,7 @@ public class Main {
 //        Creating Student class object
         Student std1 = new Student();
 
+        System.out.println("RollNo: " + std1.getRollno() + ", Name: " + std1.getName());
         std1.setName("Ahmad");
         std1.setRollno(112);
 
