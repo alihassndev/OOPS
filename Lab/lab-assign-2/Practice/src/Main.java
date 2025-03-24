@@ -6,6 +6,19 @@ public class Main {
         int max = nums[0];
         int second = max;
 
+//        Finding max and second max number
+        for (int i=1; i<nums.length; i++) {
+            if (max<nums[i]) {
+                max = nums[i];
+            } else if (second<nums[i] && second<max) {
+                second = nums[i];
+            }
+        }
+
+//        printing
+        System.out.println("First Max: " + max);
+        System.out.println("second Max: " + second);
+
 //        Sorting an array
         for (int i=0; i<nums.length-1; i++) {
             for (int j=i; j < nums.length-1; j++) {
