@@ -16,6 +16,7 @@ public class StudentTest {
             System.out.print("Enter id here: ");
             int id = sc.nextInt();
             std[i].setId(id);
+            sc.nextLine();
             System.out.print("Enter name here: ");
             String name = sc.nextLine();
             std[i].setName(name);
