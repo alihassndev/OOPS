@@ -56,7 +56,7 @@ public class Main {
 
 //        Reverse an Array
         int length = nums.length;
-        for (int i=0; i<nums.length; i++) {
+        for (int i=0; i<nums.length/2; i++) {
             if (length%2 == 0) {
                 for (int j=i; j<=(length/2); j++) {
                     int temp1 = nums[j];

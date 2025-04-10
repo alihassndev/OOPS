@@ -1,0 +1,300 @@
+import java.util.Scanner;
+
+public class Student {
+    private String name;
+    private int id;
+    private String[] courses;
+    private char[] grades;
+    private int courseCount; // Track actual number of courses
+    private static int[] existingIds = new int[5]; // Track existing IDs
+    private static int idCount = 0; // Count of existing IDs
+
+    Scanner sc = new Scanner(System.in);
+
+    Student(int maxCourses) {
+        name = "";
+        id = 0;
+        courses = new String[maxCourses];
+        grades = new char[maxCourses];
+        courseCount = 0;
+    }
+
+    // Setters
+    void setName(String n) {
+        name = n;
+    }
+
+    void setId(int d) {
+        // Check for duplicate ID
+        for (int i = 0; i < idCount; i++) {
+            if (existingIds[i] == d) {
+                System.out.println("ID " + d + " already exists. Please enter a different ID.");
+                return;
+            }
+        }
+        existingIds[idCount++] = d;
+        id = d;
+    }
+
+    void addCourse(String course, char grade) {
+        if (courseCount < courses.length) {
+            courses[courseCount] = course;
+            grades[courseCount] = grade;
+            courseCount++;
+        } else {
+            System.out.println("Cannot add more courses. Maximum reached.");
+        }
+    }
+
+    // Getters
+    String getName() {
+        return name;
+    }
+    int getId() {
+        return id;
+    }
+    String[] getCourses() {
+        return courses;
+    }
+    char[] getGrades() {
+        return grades;
+    }
+    int getCourseCount() {
+        return courseCount;
+    }
+
+    // Method for updating the records
+    void updateRecord() {
+        System.out.println("What would you like to update for student " + name + "?");
+        System.out.println("1. Name");
+        System.out.println("2. Courses/Grades");
+        System.out.print("Enter choice (0 to cancel): ");
+        int choice = sc.nextInt();
+        sc.nextLine(); // consume newline
+
+        switch (choice) {
+            case 1:
+                System.out.print("Enter new name: ");
+                name = sc.nextLine();
+                System.out.println("Name updated successfully!");
+                break;
+            case 2:
+                updateCourses();
+                break;
+            case 0:
+                System.out.println("Update cancelled.");
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    private void updateCourses() {
+        System.out.println("\nCurrent Courses:");
+        for (int i = 0; i < courseCount; i++) {
+            System.out.println((i+1) + ". " + courses[i] + " - Grade: " + grades[i]);
+        }
+
+        System.out.println("\n1. Add Course");
+        System.out.println("2. Update Grade");
+        System.out.println("3. Remove Course");
+        System.out.print("Enter choice (0 to cancel): ");
+        int choice = sc.nextInt();
+        sc.nextLine(); // consume newline
+
+        switch (choice) {
+            case 1:
+                if (courseCount < courses.length) {
+                    System.out.print("Enter course name: ");
+                    String course = sc.nextLine();
+                    System.out.print("Enter grade: ");
+                    char grade = sc.nextLine().charAt(0);
+                    addCourse(course, grade);
+                    System.out.println("Course added successfully!");
+                } else {
+                    System.out.println("Cannot add more courses. Maximum reached.");
+                }
+                break;
+            case 2:
+                System.out.print("Enter course number to update grade: ");
+                int courseNum = sc.nextInt();
+                sc.nextLine(); // consume newline
+                if (courseNum > 0 && courseNum <= courseCount) {
+                    System.out.print("Enter new grade for " + courses[courseNum-1] + ": ");
+                    grades[courseNum-1] = sc.nextLine().charAt(0);
+                    System.out.println("Grade updated successfully!");
+                } else {
+                    System.out.println("Invalid course number.");
+                }
+                break;
+            case 3:
+                System.out.print("Enter course number to remove: ");
+                int removeNum = sc.nextInt();
+                sc.nextLine(); // consume newline
+                if (removeNum > 0 && removeNum <= courseCount) {
+                    // Shift all elements after the removed course left by one
+                    for (int i = removeNum-1; i < courseCount-1; i++) {
+                        courses[i] = courses[i+1];
+                        grades[i] = grades[i+1];
+                    }
+                    courseCount--;
+                    System.out.println("Course removed successfully!");
+                } else {
+                    System.out.println("Invalid course number.");
+                }
+                break;
+            case 0:
+                System.out.println("Update cancelled.");
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    // Method to delete a course by name
+    void deleteCourse(String courseName) {
+        boolean found = false;
+        for (int i = 0; i < courseCount; i++) {
+            if (courses[i].equalsIgnoreCase(courseName)) {
+                // Shift remaining courses
+                for (int j = i; j < courseCount-1; j++) {
+                    courses[j] = courses[j+1];
+                    grades[j] = grades[j+1];
+                }
+                courseCount--;
+                found = true;
+                System.out.println("Course '" + courseName + "' deleted successfully!");
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Course '" + courseName + "' not found!");
+        }
+    }
+
+    // Delete student Data
+    void deleteData() {
+        // Remove ID from existing IDs
+        for (int i = 0; i < idCount; i++) {
+            if (existingIds[i] == id) {
+                for (int j = i; j < idCount-1; j++) {
+                    existingIds[j] = existingIds[j+1];
+                }
+                idCount--;
+                break;
+            }
+        }
+        id = 0;
+        name = "Deleted Student";
+        // Clear courses and grades
+        for (int i = 0; i < courseCount; i++) {
+            courses[i] = null;
+            grades[i] = '\0';
+        }
+        courseCount = 0;
+    }
+
+    // Display info
+    void displayInfo() {
+        System.out.println("\nStudent ID: " + id);
+        System.out.println("Name: " + name);
+        System.out.println("Courses and Grades:");
+        for (int i = 0; i < courseCount; i++) {
+            System.out.println("  " + courses[i] + " - " + grades[i]);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Student[] students = new Student[5]; // Array for 5 students
+
+        // Create 5 students with 3 courses each
+        for (int i = 0; i < 5; i++) {
+            System.out.println("\nEnter details for Student " + (i+1));
+            students[i] = new Student(5); // Allow up to 5 courses
+            
+            System.out.print("Enter ID: ");
+            int id = sc.nextInt();
+            sc.nextLine(); // consume newline
+            students[i].setId(id);
+            
+            System.out.print("Enter name: ");
+            String name = sc.nextLine();
+            students[i].setName(name);
+
+            // Add 3 courses
+            for (int j = 0; j < 3; j++) {
+                System.out.print("Enter course " + (j+1) + " name: ");
+                String course = sc.nextLine();
+                System.out.print("Enter grade for " + course + ": ");
+                char grade = sc.nextLine().charAt(0);
+                students[i].addCourse(course, grade);
+            }
+        }
+
+        // Display all students
+        System.out.println("\nAll Students:");
+        for (Student student : students) {
+            if (student.getId() != 0) { // Skip deleted students
+                student.displayInfo();
+            }
+        }
+
+        // Test update functionality
+        System.out.println("\nTesting update functionality:");
+        System.out.print("Enter student ID to update: ");
+        int updateId = sc.nextInt();
+        sc.nextLine(); // consume newline
+        
+        for (Student student : students) {
+            if (student.getId() == updateId) {
+                student.updateRecord();
+                student.displayInfo();
+                break;
+            }
+        }
+
+        // Test delete course functionality
+        System.out.println("\nTesting delete course functionality:");
+        System.out.print("Enter student ID to delete a course from: ");
+        int deleteCourseId = sc.nextInt();
+        sc.nextLine(); // consume newline
+        
+        for (Student student : students) {
+            if (student.getId() == deleteCourseId) {
+                System.out.print("Enter course name to delete: ");
+                String courseName = sc.nextLine();
+                student.deleteCourse(courseName);
+                student.displayInfo();
+                break;
+            }
+        }
+
+        // Test delete student functionality
+        System.out.println("\nTesting delete student functionality:");
+        System.out.print("Enter student ID to delete: ");
+        int deleteId = sc.nextInt();
+        sc.nextLine(); // consume newline
+        
+        for (Student student : students) {
+            if (student.getId() == deleteId) {
+                student.deleteData();
+                System.out.println("Student with ID " + deleteId + " deleted.");
+                break;
+            }
+        }
+
+        // Display remaining students
+        System.out.println("\nRemaining Students:");
+        for (Student student : students) {
+            if (student.getId() != 0) { // Skip deleted students
+                student.displayInfo();
+            }
+        }
+
+        sc.close();
+    }
+}
+
