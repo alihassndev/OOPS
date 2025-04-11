@@ -7,7 +7,11 @@ public class Main {
         String[] courses = new String[3];
         char[] grades = new char[3];
 
-        Student[] std = new Student[5];
+        Student[] std = new Student[2];
+
+        for (int i=0; i<std.length; i++) {
+            std[i] = new Student(3);
+        }
 
         for (int i=0; i<std.length;i++) {
             System.out.print("Enter id : ");
@@ -21,11 +25,43 @@ public class Main {
                 System.out.print("Enter grade for this course: ");
                 grades[j] = sc.next().charAt(0);
             }
+        }
 
-            std[i].setCourses(courses);
-            std[i].setGrade(grades);
+        int choice = 1;
+        while (choice != 0) {
+            System.out.println("Enter your choice: ");
+            System.out.print("1 -> update info || 2 -> delete course\n3 -> delete student data || 4 -> display info || 0 -> exit: ");
+            choice = sc.nextInt();
+            System.out.println("Enter id here: ");
+            int id = sc.nextInt();
 
-            std[i].displayInfo();
+            if (choice == 1) {
+                for (int k=0; k<std.length; k++) {
+                    if (std[k].getId() == id) {
+                        std[k].updateRecord(id);
+                    }
+                }
+            } else if (choice == 2) {
+                for (int k=0; k<std.length; k++) {
+                    if (std[k].getId() == id) {
+                        std[k].deleteCourse(id);
+                    }
+                }
+            } else if (choice == 3) {
+                for (int k=0; k<std.length; k++) {
+                    if (std[k].getId() == id) {
+                        std[k].deleteData(id);
+                    }
+                }
+            } else if (choice == 4) {
+                for (int k=0; k<std.length; k++) {
+                    if (std[k].getId() == id) {
+                        std[k].displayInfo();
+                    }
+                }
+            } else {
+                System.out.println("Wrong input. Please try again !");
+            }
         }
     }
 }
