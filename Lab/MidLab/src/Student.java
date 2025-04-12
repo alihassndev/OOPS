@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Student {
@@ -7,155 +5,143 @@ public class Student {
     private int id;
     private String[] courses;
     private char[] grades;
-    private List <Integer> lst = new ArrayList<>();
 
-//    int size = courses.length;
+    private static int[] ids = new int[10];
+    private static int idCount = 0;
 
     Scanner sc = new Scanner(System.in);
 
     Student(int para) {
-        name = new String();
+        name = "";
         id = 0;
         courses = new String[para];
         grades = new char[para];
     }
 
-//    Setters
     void setName(String n) {
         name = n;
     }
-//    Making sure ID do not duplicate here
-    void setId(int d) {
-        do {
-            if (lst.contains(d)) {
-                System.out.print("Enter another ID please: ");
-                id = sc.nextInt();
-                lst.add(this.id);
-            } else {
-                lst.add(d);
-                id = d;
+
+    boolean setId(int d) {
+        for (int i = 0; i < idCount; i++) {
+            if (ids[i] == d) {
+                System.out.println("Duplicate ID not allowed.");
+                return true;
             }
-        } while (id <= 0);
+        }
+        this.id = d;
+        ids[idCount++] = d;
+//        System.out.println("ID set to: " + d);
+        return false;
     }
+
     void setCourses(String[] c) {
         courses = c;
     }
+
     void setGrade(char[] g) {
         grades = g;
     }
 
-//    Getters
     String getName() {
         return name;
     }
+
     int getId() {
         return id;
     }
+
     String[] getCourses() {
         return courses;
     }
+
     char[] getGrades() {
         return grades;
     }
 
-//    Method for updating the records
     void updateRecord(int d) {
         int choice = 0;
         if (d == this.id) {
             do {
-                System.out.println("please select what do you want to update:");
-                System.out.print("1 -> Name, 2 -> Courses, 0 -> exit: ");
+                System.out.println("Select what you want to update:");
+                System.out.print("1 -> Name, 2 -> Courses, 0 -> Exit: ");
                 choice = sc.nextInt();
 
                 if (choice == 1) {
                     sc.nextLine();
-                    System.out.print("Enter new name here: ");
+                    System.out.print("Enter new name: ");
                     this.name = sc.nextLine();
-                    System.out.println("Name Updated Successfully !");
+                    System.out.println("Name updated successfully!");
                 } else if (choice == 2) {
-                    for (int i=0; i<courses.length; i++) {
-                        System.out.println("Enter new course " + (i+1) + " here: ");
+                    for (int i = 0; i < courses.length; i++) {
+                        System.out.print("Enter new course " + (i + 1) + ": ");
                         this.courses[i] = sc.next();
-                        System.out.print("Enter new grade here: ");
+                        System.out.print("Enter new grade: ");
                         this.grades[i] = sc.next().charAt(0);
                     }
+                    System.out.println("Courses updated successfully!");
                 }
             } while (choice != 0);
         } else {
-            System.out.println("Your required id does not exits !");
+            System.out.println("ID not matched.");
         }
-
-//        this.displayInfo();
     }
 
-//    Method to delete a course
-    int size = (this.courses == null ? 0 : this.courses.length);
-
     void deleteCourse(int d) {
-        String temp = "";
         if (d == this.id) {
-            for (int i=0; i<courses.length; i++) {
-                System.out.println("Course: " + this.courses[i] + ", grade: " + this.grades[i]);
+            for (int i = 0; i < courses.length; i++) {
+                System.out.println("Course: " + this.courses[i] + ", Grade: " + this.grades[i]);
             }
 
+            String temp = "";
             do {
-                sc.nextLine();
-                System.out.print("Enter name of course you want to delete || 0 -> exit: ");
+//                sc.nextLine();
+                System.out.print("Enter name of course to delete || 0 -> Exit: ");
                 temp = sc.nextLine();
 
-                for (int i=0; i<courses.length; i++) {
-                    if (temp == this.courses[i]) {
-                        this.courses[i] = "null";
-                        this.grades[i] = '0';
-                    } else {
-                        System.out.println(temp + " not found !");
+                if (temp.equals("0")) break;
+
+                boolean found = false;
+                for (int i = 0; i < courses.length; i++) {
+                    if (temp.equals(courses[i])) {
+                        courses[i] = "null";
+                        grades[i] = '0';
+                        found = true;
+                        System.out.println("Course deleted.");
                         break;
                     }
                 }
-            } while (temp != "0");
 
-            int tempSize = courses.length;
-            for (int i=0; i<this.size; i++) {
-                if (courses[i] == "null") {
-                    String tem = courses[i];
-                    courses[i] = courses[tempSize-1];
-                    courses[tempSize-1] = tem;
-                    tempSize--;
+                if (!found) {
+                    System.out.println(temp + " not found!");
                 }
-            }
-        }
 
-//        this.displayInfo();
+            } while (true);
+        }
     }
 
-//    Delete student Data
     void deleteData(int d) {
-        if (lst.contains(d)) {
+        if (d == this.id) {
             this.id = 0;
             this.name = "Default";
             this.courses = new String[3];
             this.grades = new char[3];
-
-            System.out.println("Delete student data !");
-            this.displayInfo();
-            if (lst.contains(d)) {
-                lst.remove(d);
-            }
+            System.out.println("Student data deleted!");
         } else {
-            System.out.println("ID not found !");
+            System.out.println("ID not found!");
         }
     }
 
-//    Display info
     void displayInfo() {
+        if (this.id == 0) {
+            System.out.println("Student record deleted.");
+            return;
+        }
 
-        System.out.println("You id : " + this.id + ", name : " + this.name);
-
-        System.out.println("Your courses are: ");
-        for (int i=0; i<courses.length; i++) {
-            if (courses[i] == "null") {
-                continue;
-            } else {
+        System.out.println("ID: " + this.id + ", Name: " + this.name);
+        System.out.println("Courses and Grades:");
+        for (int i = 0; i < courses.length; i++) {
+            if (!courses[i].equals("null")) {
                 System.out.println(courses[i] + " -> " + grades[i]);
             }
         }
