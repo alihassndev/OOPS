@@ -1,21 +1,38 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Student1 {
     private int id;
     private String name;
-    private List <String> courses = new ArrayList<>();
-    private List <Character> grades = new ArrayList<>();
-    private List<Integer> ids = new ArrayList<>();
+    private List <String> courses;
+    private List <Character> grades;
+
+    // Shared across all instances
+    private static List<Integer> ids = new ArrayList<>();
+    private static Scanner sc = new Scanner(System.in);
+
+//    Parameterized Constructor
+    Student1() {
+        id = 0;
+        name = "Default";
+        courses = new ArrayList<>();
+        grades = new ArrayList<>();
+    }
 
 //    Setters
-    boolean setId(int d) {
+    void setId(int d) {
         if (ids.isEmpty() || !ids.contains(d)) {
             this.id = d;
-            return false;
+            ids.add(d);
         } else {
-            System.out.println("Duplicate id please another !");
-            return true;
+            int newId;
+            do {
+                System.out.print("Duplicate ID, please enter another: ");
+                newId = sc.nextInt();
+            } while (ids.contains(newId));
+            this.id = newId;
+            ids.add(newId);
         }
     }
     void setName(String n) {
@@ -40,5 +57,20 @@ public class Student1 {
     }
     List<Character> getGrades() {
         return grades;
+    }
+
+//    Update info
+    void updateInfo(int d) {
+//        logic here
+    }
+
+//    Display info
+    void displayInfo() {
+        System.out.println("Your id: " + this.id + ", Name: " + this.name);
+        System.out.println("Your Course are: ");
+
+        for (int i=0; i<courses.size(); i++) {
+            System.out.println(courses.get(i) + " -> " + grades.get(i));
+        }
     }
 }
