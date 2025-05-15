@@ -1,0 +1,221 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    private int id;
+    private String name;
+    private String email;
+    private String phone;
+
+    Scanner sc = new Scanner(System.in);
+    public static ArrayList<Integer> ids = new ArrayList<>();
+
+//    Constructor
+    Student(){
+        this.id = 0;
+        this.name = "Default";
+        this.email = "user@gmail.com";
+        this.phone = "+92";
+    }
+
+//    Getters and Setters
+    void setId(int i) {
+        boolean check = false;
+        do {
+            if (ids.isEmpty()) {
+                ids.add(i);
+                id = i;
+                check = true;
+            } else if (ids.contains(i) && !(ids.isEmpty())) {
+                System.out.print("Sorry try another id: ");
+                int tempId = sc.nextInt();
+                i = tempId;
+            } else {
+                ids.add(i);
+                id = i;
+                check = true;
+            }
+        } while (!check);
+    }
+    void setName(String n) {
+        boolean check = false;
+
+        do {
+            String[] tokens = n.split(" ");
+
+            if (tokens.length == 2 || tokens.length == 3) {
+                name = n;
+                check = true;
+            } else {
+                System.out.print("Enter name again here: ");
+                String tempName = sc.nextLine();
+                n = tempName;
+            }
+        } while (!check);
+    }
+    void setEmail(String e) {
+        boolean check = false;
+        e = e.trim();
+
+        do {
+            if (e.contains("@") && e.contains(".com") && !e.contains(" ")) {
+                email = e;
+                check = true;
+            } else {
+                System.out.print("Enter email again: ");
+                String tempEmail = sc.nextLine();
+            }
+        } while (!check);
+
+    }
+    void setPhone(String p) {
+        String starting = "+92";
+        boolean check = false;
+
+        do {
+            char[] chars = p.toCharArray();
+            boolean allDigits = true;
+
+            for (int i=0; i<chars.length; i++) {
+                if (Character.isLetter(chars[i])) {
+                    allDigits = false;
+                }
+            }
+
+            if (p.length() == 10 && allDigits) {
+                phone = starting + "-" + p;
+                check = true;
+            } else {
+                System.out.print("Enter phone number again: ");
+                String tempPhone = sc.nextLine();
+                p = tempPhone;
+            }
+        } while (!check);
+
+    }
+
+    int getId() {
+        return id;
+    }
+    String getName() {
+        return name;
+    }
+    String getEmail() {
+        return email;
+    }
+    String getPhone() {
+        return phone;
+    }
+
+//    display info
+    void displayInfo() {
+        System.out.println("ID: " + this.getId());
+        System.out.println("Name: " + this.getName());
+        System.out.println("Email: " + this.getEmail());
+        System.out.println("Phone: " + this.getPhone());
+    }
+
+//    update method
+    void updateInfo() {
+        int choice = 0;
+        do {
+            try {
+                System.out.println("Enter 1 -> Name, 2 -> Email, 3 -> Phone, 0 -> exit :");
+                System.out.print("Enter you choice here: ");
+                choice = sc.nextInt();
+                sc.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter updated name: ");
+                        String tempName = sc.nextLine();
+                        this.setName(tempName);
+                        System.out.println("Your name is successfully updated !");
+                        break;
+                    case 2:
+                        System.out.print("Enter updated email: ");
+                        String tempEmail = sc.nextLine();
+                        this.setEmail(tempEmail);
+                        System.out.println("Your email is successfully updated !");
+                        break;
+                    case 3:
+                        System.out.print("Enter updated phone: ");
+                        String tempPhone = sc.nextLine();
+                        this.setPhone(tempPhone);
+                        System.out.println("Your phone is successfully updated !");
+                        break;
+                    default:
+                        System.out.println("Wrong Choice !");
+                }
+            } catch (Exception e) {
+                System.out.println("Error occur");
+                this.displayInfo();
+            }
+        } while (choice != 0);
+    }
+}
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        Student[] stds = new Student[2];
+
+        for (int i=0; i<stds.length; i++) {
+            stds[i] = new Student();
+
+            System.out.print("Enter id here: ");
+            int id = sc.nextInt();
+            stds[i].setId(id);
+
+            sc.nextLine();
+            System.out.print("Enter name here: ");
+            String name = sc.nextLine();
+            stds[i].setName(name);
+
+            System.out.print("Enter email here: ");
+            String email = sc.nextLine();
+            stds[i].setEmail(email);
+
+            System.out.print("Enter phone number \'000 000 0000\' : ");
+            String phone = sc.nextLine();
+            stds[i].setPhone(phone);
+        }
+
+//        Display info
+//        for (Student s: stds) {
+//            s.displayInfo();
+//        }
+
+        int choice;
+        do {
+            System.out.print("Enter 1 -> Update, 2 -> DisplayInfo, \'0\' -> exit: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter id to update info: ");
+                    int tempId1 = sc.nextInt();
+
+                    for (int i=0; i<stds.length; i++) {
+                        if (tempId1 == stds[i].getId()) {
+                            stds[i].updateInfo();
+                        }
+                    }
+
+                    break;
+                case 2:
+                    System.out.print("Enter id to display info: ");
+                    int tempId2 = sc.nextInt();
+
+                    for (int i=0; i<stds.length; i++) {
+                        if (tempId2 == stds[i].getId()) {
+                            stds[i].displayInfo();
+                        }
+                    }
+            }
+        } while (choice != 0);
+    }
+}
