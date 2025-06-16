@@ -32,6 +32,10 @@ public class Book {
         return available;
     }
 
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     @Override
     public String toString() {
         return String.format("ID: %s\nTitle: %s\nAuthor: %s\nAvailable: %s",

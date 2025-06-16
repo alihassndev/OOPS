@@ -258,14 +258,15 @@ public class UserDashboard extends JFrame {
         List<BookHistory> history = FileHandler.getUserHistory(user.getUsername());
         StringBuilder sb = new StringBuilder();
         sb.append("My Book History:\n");
-        sb.append(String.format("%-10s %-10s %-20s\n", "Book ID", "Action", "Timestamp"));
+        sb.append(String.format("%-10s %-30s %-15s %-15s\n", "Book ID", "Title", "Status", "Borrow Date"));
         sb.append("--------------------------------------------------------------------------------\n");
 
         for (BookHistory entry : history) {
-            sb.append(String.format("%-10s %-10s %-20s\n",
+            sb.append(String.format("%-10s %-30s %-15s %-15s\n",
                     entry.getBookId(),
-                    entry.getAction(),
-                    entry.getTimestamp()));
+                    entry.getBookTitle(),
+                    entry.getStatus(),
+                    entry.getBorrowDate()));
         }
         area.setText(sb.toString());
         area.setCaretPosition(0);
@@ -317,12 +318,15 @@ public class UserDashboard extends JFrame {
         List<BookHistory> history = FileHandler.getUserHistory(user.getUsername());
         StringBuilder historyText = new StringBuilder();
         historyText.append("Your Book History:\n");
-        historyText.append(String.format("%-10s %-15s %-20s\n", "Book ID", "Action", "Time"));
+        historyText.append(String.format("%-10s %-30s %-15s %-15s\n", "Book ID", "Title", "Status", "Borrow Date"));
         historyText.append("--------------------------------------------------------\n");
 
         for (BookHistory entry : history) {
-            historyText.append(String.format("%-10s %-15s %-20s\n",
-                    entry.getBookId(), entry.getAction(), entry.getTimestamp()));
+            historyText.append(String.format("%-10s %-30s %-15s %-15s\n",
+                    entry.getBookId(),
+                    entry.getBookTitle(),
+                    entry.getStatus(),
+                    entry.getBorrowDate()));
         }
 
         if (history.isEmpty()) {
