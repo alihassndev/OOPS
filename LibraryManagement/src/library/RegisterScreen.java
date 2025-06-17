@@ -3,6 +3,7 @@ package library;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.util.List;
 
 public class RegisterScreen extends JFrame {
     private JTextField usernameField;
@@ -115,6 +116,17 @@ public class RegisterScreen extends JFrame {
         if (username.isEmpty() || password.isEmpty()) {
             UIConstants.showError(this, "Please fill in all fields");
             return;
+        }
+
+        // Check if trying to register as admin when one already exists
+        if (role.equals("Admin")) {
+            List<User> users = FileHandler.readUsers("users.txt");
+            boolean adminExists = users.stream()
+                    .anyMatch(user -> user.getRole().equalsIgnoreCase("Admin"));
+            if (adminExists) {
+                UIConstants.showError(this, "An admin user already exists. Only one admin is allowed.");
+                return;
+            }
         }
 
         if (FileHandler.userExists(username, role)) {

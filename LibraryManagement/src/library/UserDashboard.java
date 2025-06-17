@@ -66,9 +66,9 @@ public class UserDashboard extends JFrame {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.setOpaque(false);
 
-        JLabel searchLabel = new JLabel("Search by ID:");
+        JLabel searchLabel = new JLabel("Search by Title:");
         searchLabel.setFont(UIConstants.NORMAL_FONT);
-        bookIdField = new JTextField(10);
+        bookIdField = new JTextField(20);
         bookIdField.setFont(UIConstants.NORMAL_FONT);
 
         JButton searchButton = new JButton("Search");
@@ -168,27 +168,32 @@ public class UserDashboard extends JFrame {
     }
 
     private void handleSearch() {
-        String searchId = bookIdField.getText().trim();
-        if (searchId.isEmpty()) {
+        String searchTitle = bookIdField.getText().trim().toLowerCase();
+        if (searchTitle.isEmpty()) {
             refreshBookList();
             return;
         }
 
         List<Book> books = FileHandler.getBooks();
         StringBuilder result = new StringBuilder();
+        result.append("Search Results:\n");
+        result.append(String.format("%-10s %-30s %-20s %-10s\n", "ID", "Title", "Author", "Status"));
+        result.append("--------------------------------------------------------------------------------\n");
         boolean found = false;
 
         for (Book book : books) {
-            if (book.getId().equals(searchId)) {
-                result.append(String.format("ID: %s\nTitle: %s\nAuthor: %s\nAvailable: %s\n\n",
-                        book.getId(), book.getTitle(), book.getAuthor(), book.isAvailable() ? "Yes" : "No"));
+            if (book.getTitle().toLowerCase().contains(searchTitle)) {
+                result.append(String.format("%-10s %-30s %-20s %-10s\n",
+                        book.getId(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.isAvailable() ? "Available" : "Issued"));
                 found = true;
-                break;
             }
         }
 
         if (!found) {
-            result.append("No book found with ID: ").append(searchId);
+            result.append("No books found matching: ").append(searchTitle);
         }
 
         bookListArea.setText(result.toString());
@@ -227,10 +232,16 @@ public class UserDashboard extends JFrame {
     private void refreshBookList() {
         List<Book> books = FileHandler.readBooks();
         StringBuilder result = new StringBuilder();
+        result.append("Available Books:\n");
+        result.append(String.format("%-10s %-30s %-20s %-10s\n", "ID", "Title", "Author", "Status"));
+        result.append("--------------------------------------------------------------------------------\n");
 
         for (Book book : books) {
-            result.append(String.format("ID: %s\nTitle: %s\nAuthor: %s\nAvailable: %s\n\n",
-                    book.getId(), book.getTitle(), book.getAuthor(), book.isAvailable() ? "Yes" : "No"));
+            result.append(String.format("%-10s %-30s %-20s %-10s\n",
+                    book.getId(),
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.isAvailable() ? "Available" : "Issued"));
         }
 
         bookListArea.setText(result.toString());

@@ -1,2 +1,3 @@
+ali,ali,Admin
+hassan,hassan,User
 ali,ali,User
-a,a,Admin
