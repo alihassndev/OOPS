@@ -231,6 +231,9 @@ public class UserDashboard extends JFrame {
 
     private void refreshBookList() {
         List<Book> books = FileHandler.readBooks();
+        // Sort books by title
+        books.sort((b1, b2) -> b1.getTitle().compareToIgnoreCase(b2.getTitle()));
+
         StringBuilder result = new StringBuilder();
         result.append("Available Books:\n");
         result.append(String.format("%-10s %-30s %-20s %-10s\n", "ID", "Title", "Author", "Status"));
