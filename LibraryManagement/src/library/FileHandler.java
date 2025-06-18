@@ -116,7 +116,7 @@ public class FileHandler {
                         LocalDate.now(),
                         null,
                         "BORROWED");
-                writeToHistory(history);
+                writeToHistory(history, userId);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -153,7 +153,7 @@ public class FileHandler {
                         LocalDate.now(),
                         LocalDate.now(),
                         "RETURNED");
-                writeToHistory(history);
+                writeToHistory(history, userId);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -166,16 +166,19 @@ public class FileHandler {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 4) {
-                    Book book = findBookById(parts[0]);
-                    if (book != null) {
-                        history.add(new BookHistory(
-                                parts[0], // bookId
-                                parts[1], // bookTitle
-                                LocalDate.parse(parts[3].split(" ")[0]), // borrowDate
-                                parts[2].equals("RETURNED") ? LocalDate.parse(parts[3].split(" ")[0]) : null, // returnDate
-                                parts[2] // status
-                        ));
+                if (parts.length >= 5) {
+                    // Check if this history entry belongs to the current user
+                    if (parts[1].equals(userId)) {
+                        Book book = findBookById(parts[0]);
+                        if (book != null) {
+                            history.add(new BookHistory(
+                                    parts[0], // bookId
+                                    parts[4], // bookTitle
+                                    LocalDate.parse(parts[3].split(" ")[0]), // borrowDate
+                                    parts[2].equals("RETURNED") ? LocalDate.parse(parts[3].split(" ")[0]) : null, // returnDate
+                                    parts[2] // status
+                            ));
+                        }
                     }
                 }
             }
@@ -195,14 +198,15 @@ public class FileHandler {
         return null;
     }
 
-    public static void writeToHistory(BookHistory history) {
+    public static void writeToHistory(BookHistory history, String username) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(HISTORY_FILE, true))) {
             String timestamp = DATE_FORMAT.format(new Date());
-            bw.write(String.format("%s,%s,%s,%s",
+            bw.write(String.format("%s,%s,%s,%s,%s",
                     history.getBookId(),
-                    history.getBookTitle(),
+                    username,
                     history.getStatus(),
-                    timestamp));
+                    timestamp,
+                    history.getBookTitle()));
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -261,27 +265,57 @@ public class FileHandler {
         return false;
     }
 
+    public static boolean issueBook(String bookId, String username) {
+        if (!isBookAvailable(bookId)) {
+            return false;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ISSUED_FILE, true))) {
+            String timestamp = DATE_FORMAT.format(new Date());
+            bw.write(bookId + "," + username + "," + timestamp);
+            bw.newLine();
+
+            // Add to history
+            Book bookToIssue = findBookById(bookId);
+            if (bookToIssue != null) {
+                BookHistory history = new BookHistory(
+                        bookId,
+                        bookToIssue.getTitle(),
+                        LocalDate.now(),
+                        null,
+                        "BORROWED");
+                writeToHistory(history, username);
+            }
+
+            // Update book availability
+            List<Book> books = readBooks();
+            for (Book book : books) {
+                if (book.getId().equals(bookId)) {
+                    book.setAvailable(false);
+                    break;
+                }
+            }
+            updateBooks(books);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static boolean returnBook(String bookId) {
         List<String> lines = readLines(ISSUED_FILE);
         List<String> updatedLines = new ArrayList<>();
         boolean found = false;
+        String username = null;
 
         for (String line : lines) {
             String[] parts = line.split(",");
             if (parts.length >= 2 && parts[0].equals(bookId)) {
                 found = true;
-                // Add to history
-                String username = parts[1];
-                Book book = findBookById(bookId);
-                if (book != null) {
-                    BookHistory history = new BookHistory(
-                            bookId,
-                            book.getTitle(),
-                            LocalDate.now(),
-                            LocalDate.now(),
-                            "RETURNED");
-                    writeToHistory(history);
-                }
+                username = parts[1];
+                // Update history status to RETURNED
+                updateHistoryStatus(bookId, username, "RETURNED");
             } else {
                 updatedLines.add(line);
             }
@@ -293,7 +327,58 @@ public class FileHandler {
 
         // Update issued books file
         writeLines(ISSUED_FILE, updatedLines);
+
+        // Update book availability in books file
+        List<Book> books = readBooks();
+        for (Book book : books) {
+            if (book.getId().equals(bookId)) {
+                book.setAvailable(true);
+                break;
+            }
+        }
+        updateBooks(books);
+
         return true;
+    }
+
+    private static void updateHistoryStatus(String bookId, String username, String newStatus) {
+        List<String> lines = readLines(HISTORY_FILE);
+        List<String> updatedLines = new ArrayList<>();
+        boolean found = false;
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length >= 5 && parts[0].equals(bookId) && parts[1].equals(username)) {
+                // Update the status of the existing entry
+                String timestamp = DATE_FORMAT.format(new Date());
+                updatedLines.add(String.format("%s,%s,%s,%s,%s",
+                        parts[0], // bookId
+                        parts[1], // username
+                        newStatus,
+                        timestamp,
+                        parts[4])); // bookTitle
+                found = true;
+            } else {
+                updatedLines.add(line);
+            }
+        }
+
+        if (!found) {
+            // If no existing entry found, create a new one
+            Book book = findBookById(bookId);
+            if (book != null) {
+                BookHistory history = new BookHistory(
+                        bookId,
+                        book.getTitle(),
+                        LocalDate.now(),
+                        newStatus.equals("RETURNED") ? LocalDate.now() : null,
+                        newStatus);
+                writeToHistory(history, username);
+            }
+        } else {
+            // Write updated history
+            writeLines(HISTORY_FILE, updatedLines);
+        }
     }
 
     private static List<String> readLines(String filename) {
@@ -341,43 +426,5 @@ public class FileHandler {
             }
         }
         return false;
-    }
-
-    public static boolean issueBook(String bookId, String username) {
-        if (!isBookAvailable(bookId)) {
-            return false;
-        }
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ISSUED_FILE, true))) {
-            String timestamp = DATE_FORMAT.format(new Date());
-            bw.write(bookId + "," + username + "," + timestamp);
-            bw.newLine();
-
-            // Add to history
-            Book bookToIssue = findBookById(bookId);
-            if (bookToIssue != null) {
-                BookHistory history = new BookHistory(
-                        bookId,
-                        bookToIssue.getTitle(),
-                        LocalDate.now(),
-                        null,
-                        "BORROWED");
-                writeToHistory(history);
-            }
-
-            // Update book availability
-            List<Book> books = readBooks();
-            for (Book book : books) {
-                if (book.getId().equals(bookId)) {
-                    book.setAvailable(false);
-                    break;
-                }
-            }
-            updateBooks(books);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 }

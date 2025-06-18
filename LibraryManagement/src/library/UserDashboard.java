@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
+import java.util.Comparator;
 
 public class UserDashboard extends JFrame {
     private User user;
@@ -231,8 +232,8 @@ public class UserDashboard extends JFrame {
 
     private void refreshBookList() {
         List<Book> books = FileHandler.readBooks();
-        // Sort books by title
-        books.sort((b1, b2) -> b1.getTitle().compareToIgnoreCase(b2.getTitle()));
+        // Sort books by Book ID (numeric)
+        books.sort(Comparator.comparingInt(b -> Integer.parseInt(b.getId())));
 
         StringBuilder result = new StringBuilder();
         result.append("Available Books:\n");
@@ -272,7 +273,8 @@ public class UserDashboard extends JFrame {
         List<BookHistory> history = FileHandler.getUserHistory(user.getUsername());
         StringBuilder sb = new StringBuilder();
         sb.append("My Book History:\n");
-        sb.append(String.format("%-10s %-30s %-15s %-15s\n", "Book ID", "Title", "Status", "Borrow Date"));
+        sb.append(String.format("%-10s %-30s %-15s %-15s\n", "Book ID", "Title",
+                "Status", "Borrow Date"));
         sb.append("--------------------------------------------------------------------------------\n");
 
         for (BookHistory entry : history) {
@@ -304,6 +306,7 @@ public class UserDashboard extends JFrame {
         if (FileHandler.returnBook(bookId)) {
             UIConstants.showSuccess(this, "Book returned successfully!");
             refreshData();
+            refreshBookList();
         } else {
             UIConstants.showError(this, "Failed to return book. Please try again.");
         }
