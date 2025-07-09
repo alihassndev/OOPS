@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="55fee240-54fb-4ccc-b5f3-232ce82a0516" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assign4.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/LabTask4.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.metadata/.lock_info" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.metadata/.lock_info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.metadata/.log" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.metadata/.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.metadata/.plugins/org.eclipse.m2e.logback/0.log" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.metadata/.plugins/org.eclipse.m2e.logback/0.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.metadata/version.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.metadata/version.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +36,6 @@
     "Application.LabTask4.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true"
   }
